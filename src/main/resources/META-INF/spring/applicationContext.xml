@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd"
+       xmlns:jdbc="http://www.springframework.org/schema/c">
+
+	<cxf:rsServer id="restService" address="http://localhost:9000/employeeservice"
+				  serviceClass="org.bob.cxfrs.beans.EmployeeServiceResource">
+	</cxf:rsServer>
+    <!--<bean id="myDataSource" name="myDataSource"-->
+          <!--class="org.springframework.jdbc.datasource.DriverManagerDataSource"  >-->
+        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver" />-->
+        <!--<property name="url" value="jdbc:mysql://mysql:3306/trainer" />-->
+        <!--<property name="username" value="trainer_user" />-->
+        <!--<property name="password" value="trainer_pass" />-->
+    <!--</bean>-->
+
+    <bean id="myDataSource" name="myDataSource"
+          class="org.apache.commons.dbcp.BasicDataSource"  >
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/trainer" />
+        <property name="username" value="trainer_user" />
+        <property name="password" value="trainer_pass" />
+    </bean>
+
+    <!--<jdbc:initialize-database data-source="dataSource"-->
+                              <!--enabled="true">-->
+        <!--<jdbc:script location="classpath:db-schema.sql" />-->
+    <!--</jdbc:initialize-database>-->
+    <!--<bean name="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
+        <!--<property name="driverClassName" value= "com.mysql.jdbc.Driver" />-->
+        <!--<property name="url" value="jdbc:mysql://mysql:3306/trainer" />-->
+        <!--<property name="username" value="trainer_user" />-->
+        <!--<property name="password" value="trainer_pass" />-->
+        <!--<property name="maxIdle" value="1" />-->
+    <!--</bean>-->
+    <!--<bean id="myDataSource"  name="myDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">-->
+        <!--<property name="url" value="jdbc:mysql://mysql:3306/trainer" />-->
+        <!--<property name="user" value="trainer_user" />-->
+        <!--<property name="password" value="trainer_pass" />-->
+    <!--</bean>-->
+    <bean id="sqlComponent" class="org.apache.camel.component.sql.SqlComponent">
+        <property name="dataSource" ref="myDataSource" />
+    </bean>
+
+    <bean id="myRoute" class="org.bob.cxfrs.beans.EmployeeServiceRouteBuilder">
+    </bean>
+
+	<camelContext id="camelId" xmlns="http://camel.apache.org/schema/spring">
+		<routeBuilder ref="myRoute" />
+	</camelContext>
+
+</beans>
