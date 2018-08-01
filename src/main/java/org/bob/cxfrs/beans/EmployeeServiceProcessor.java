@@ -6,6 +6,6 @@ import org.apache.camel.Processor;
 public class EmployeeServiceProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         String msg = exchange.getIn().getBody(String.class);
-        exchange.getOut().setBody("this is an updated message " + msg);
+        exchange.getOut().setBody(msg);
     }
 }
